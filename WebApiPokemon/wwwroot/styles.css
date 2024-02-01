@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+#pokemon-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Define 3 colunas com largura mínima de 300px */
+    grid-gap: 20px; /* Espaçamento entre os itens */
+    padding: 20px;
+}
+
+#pokemon-container {
+    position: relative;
+    width: 100px; /* Largura da imagem do Pokémon */
+    height: 100px; /* Altura da imagem do Pokémon */
+}
+
+#pokemon-image {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 200px; /* Ajuste conforme necessário */
+    height: 200px; /* Ajuste conforme necessário */
+    transition: transform 0.5s ease; /* Transição para suavizar o movimento */
+    cursor: pointer; /* Altera o cursor para indicar que a imagem é clicável */
+}
+
+.pokeball {
+    background-image: url('pokebola.png'); /* Imagem da Pokébola */
+    background-size: cover;
+    width: 100px; /* Largura da Pokébola */
+    height: 100px; /* Altura da Pokébola */
+    position: absolute; /* Posição absoluta para sobrepor a imagem do Pokémon */
+    pointer-events: none; /* Permite que os eventos de clique passem pela Pokébola */
+    transition: transform 0.5s ease; /* Transição para suavizar o movimento */
+}
+
+.pokeball.open {
+    transform: scale(2); /* Aumenta o tamanho da Pokébola para esconder o Pokémon */
+}
+
+.pokeball.closed {
+    transform: scale(1); /* Tamanho normal da Pokébola */
+}
+
+.pokemon {
+    position: relative;
+}
+
+.pokemon-image {
+    width: 150px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.hidden {
+    display: none;
+}
+
+.pokemon-image.pokeball {
+    transform: scale(0.7) translateY(20px);
+    transition: transform 0.5s ease;
+}
+
+.pokemon-image.open {
+    transform: scale(0.8) translateY(10px);
+}
+
+.detail-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.detail-item:hover {
+    transform: translateY(-5px);
+}
+
+.detail-row {
+    margin-bottom: 5px;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-row strong {
+    font-weight: bold;
+}
+
+.detail-row img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.detail-row img.expanded {
+    width: 100%; /* Expande a imagem para ocupar 100% da largura do pai */
+    height: auto;
+    position: fixed; /* Fixa a posição da imagem para cobrir toda a tela */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 9999; /* Garante que a imagem esteja sempre na parte superior */
+    background-color: rgba(0, 0, 0, 0.8); /* Adiciona um fundo escuro transparente */
+    transition: transform 0.3s ease; /* Adiciona uma transição suave ao expandir */
+}
