@@ -109,6 +109,43 @@ namespace WebApiPokemon.Services
             return true;
         }
 
+        public async Task<List<PokemonDto>> GetAllPokemonsDtoPaginationAsync()
+        {
+            try
+            {
+                IEnumerable<Pokemon>? pokemons = await Repository.TakeListAsync();
+                List<Dominio.Modelo.Form> forms = RepositoryForms.TakeList().ToList();
+                List<PokemonDto> pokemons_dto = new();
+
+                if (pokemons != null)
+                {
+                    foreach (Pokemon pokemon in pokemons.OrderBy(x => x.idPokemon).ToList())
+                    {
+                        Dominio.Modelo.Form? form = forms.FirstOrDefault(x => x.idPokemon == pokemon.idPokemon || x.name == pokemon.name);
+
+                        if (form == null ||
+                            form.sprites == null ||
+                            string.IsNullOrWhiteSpace(form.sprites.front_default))
+                        {
+                            continue;
+                        }
+
+                        pokemons_dto.Add(new PokemonDto()
+                        {
+                            Name = pokemon.name,
+                            ImageUrl = form.sprites.front_default
+                        });
+                    }
+                }
+
+                return pokemons_dto;
+            }
+            catch (Exception)
+            {
+                return new List<PokemonDto>();
+            }
+        }
+
         public async Task<List<PokemonDto>> GetPokemonsDtoPaginationAsync(int pageNumber = 1, int pageSize = 20)
         {
             try

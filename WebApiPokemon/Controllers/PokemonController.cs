@@ -23,6 +23,21 @@ public class PokemonController : ControllerBase
         }
     }
 
+    [HttpGet(Name = "GetAllPokemons")]
+    public async Task<ActionResult<PokemonDto>> GetAllPokemons()
+    {
+        try
+        {
+            PokemonAppService pokemonAppService = new();
+            return Ok(await pokemonAppService.GetAllPokemonsDtoPaginationAsync());
+        }
+        catch (Exception ex)
+        {
+            // Trate qualquer exceção e retorne um erro HTTP 500
+            return StatusCode(500, $"Erro ao recuperar Pokémons: {ex.Message}");
+        }
+    }
+
     [HttpPost(Name = "InsertPokemon")]
     public async Task<ActionResult<bool>> InsertPokemon()
     {
