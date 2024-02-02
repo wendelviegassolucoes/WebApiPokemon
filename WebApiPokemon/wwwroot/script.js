@@ -36,7 +36,7 @@ function createDetailElement(key, value) {
         detailItem.appendChild(img);
     } else {
         detailItem.textContent = `${value}`;
-        detailItem.classList.add(`pokemon-name-${value}`);
+        detailItem.classList.add(`pokemon-name`);
     }
 
     return detailItem;
@@ -46,7 +46,7 @@ function createImageElement(value) {
     const img = document.createElement('img');
     img.src = value;
     img.alt = 'Pokemon Image';
-    img.classList.add(`pokemon-image-${value}`);
+    img.classList.add(`pokemon-image`);
 
     img.addEventListener('click', function () {
         animatePokemon(img, value);
@@ -54,7 +54,7 @@ function createImageElement(value) {
 
     img.addEventListener("contextmenu", function (event) {
         event.preventDefault();
-        showContextMenu(event, img.src);
+        showContextMenu(event, img, value);
     });
 
     return img;
@@ -71,7 +71,7 @@ function animatePokemon(img, value) {
     }, 2000);
 }
 
-function showContextMenu(event, imageURL) {
+function showContextMenu(event, img, value) {
     if (currentMenu) {
         currentMenu.remove();
     }
@@ -92,8 +92,8 @@ function showContextMenu(event, imageURL) {
     document.body.appendChild(menu);
     currentMenu = menu;
 
-    document.getElementById("feedPokemon").addEventListener("click", feedPokemon.bind(null, imageURL, event));
-    document.getElementById("killPokemon").addEventListener("click", killPokemon.bind(null, imageURL, event));
+    document.getElementById("feedPokemon").addEventListener("click", feedPokemon.bind(null, img.src, event));
+    document.getElementById("killPokemon").addEventListener("click", killPokemon.bind(null, value, event));
 
     document.addEventListener("click", closeMenu);
 }
@@ -125,7 +125,7 @@ async function killPokemon(value, event) {
             }
         });
         if (response.ok) {
-            showBrokenHeart(event);
+            showBrokenHeart(value, event);
         } else {
             console.error('Erro ao matar o Pokemon:', response.status);
         }
@@ -137,7 +137,7 @@ async function killPokemon(value, event) {
 function showHeart(event) {
     const heart = createHeartElement();
     heart.style.position = "absolute";
-    heart.style.left = (event.pageX + 50) + "px";
+    heart.style.left = (event.pageX - 70) + "px";
     heart.style.top = event.pageY + "px";
     document.body.appendChild(heart);
     setTimeout(() => {
@@ -145,16 +145,19 @@ function showHeart(event) {
     }, 3000);
 }
 
-function showBrokenHeart(event) {
+function showBrokenHeart(value, event) {
     const heart = createBrokenHeartElement();
     heart.style.position = "absolute";
-    heart.style.left = (event.pageX + 50) + "px";
+    heart.style.left = (event.pageX - 70) + "px";
     heart.style.top = event.pageY + "px";
     document.body.appendChild(heart);
+    closeMenu(event);
+    
     setTimeout(() => {
+        const pokemonContainerDiv = document.querySelector(`.pokemon-image[src="${value}"]`).parentNode.parentNode;
+        pokemonContainerDiv.remove();
         heart.remove();
-        location.reload();
-    }, 3000);
+    }, 2000);
 }
 
 function createHeartElement() {
@@ -213,7 +216,7 @@ async function loadAllPokemons() {
                 pokemonList.appendChild(pokemonDetails);
             }
         });
-        setTimeout(() => {}, 1000);
+        setTimeout(() => { }, 1000);
     } catch (error) {
         console.error('Erro ao carregar todos os pokémons:', error);
     } finally {
@@ -237,7 +240,7 @@ async function loadPokemons() {
             pokemonList.appendChild(pokemonDetails);
         });
 
-        setTimeout(() => {}, 1000);
+        setTimeout(() => { }, 1000);
         currentPage++;
     } catch (error) {
         console.error('Erro ao carregar pokémons:', error);
