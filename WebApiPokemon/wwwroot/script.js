@@ -1,13 +1,24 @@
 const pokemonList = document.getElementById('pokemon-list');
 const loadMoreButton = document.getElementById('load-more');
 const loadAllButton = document.getElementById('load-all');
+const reviveButton = document.getElementById('revive');
 const loadingIndicator = document.getElementById('loading');
 let currentPage = 1;
 const pageSize = 100; // Tamanho da página
+let currentMenu = null; // Variável para armazenar o menu atualmente aberto
 
 loadPokemons();
 loadMoreButton.addEventListener('click', loadPokemons);
 loadAllButton.addEventListener('click', loadAllPokemons);
+reviveButton.addEventListener('click', revivePokemons);
+
+document.addEventListener("click", function (event) {
+    if (currentMenu && !currentMenu.contains(event.target)) {
+        currentMenu.remove();
+        currentMenu = null;
+    }
+});
+
 
 function createDetailElement(key, value) {
     const detailItem = document.createElement('div');
@@ -18,67 +29,27 @@ function createDetailElement(key, value) {
         return detailItem;
     }
 
-    if (Array.isArray(value) && value.every(item => typeof item === 'object')) {
-        // Se for uma matriz de objetos, exiba seus objetos em uma lista
-        const list = document.createElement('ul');
-        value.forEach(obj => {
-            const listItem = document.createElement('li');
-            const objDetails = document.createElement('ul');
-
-            // Iterar sobre as propriedades do objeto dentro da matriz
-            Object.entries(obj).forEach(([prop, val]) => {
-                const objDetailItem = document.createElement('li');
-                if (typeof val === 'object') {
-                    // Se for um objeto, exiba suas propriedades e valores
-                    if (Array.isArray(val)) {
-                        // Se for uma matriz, chame recursivamente createDetailElement para lidar com cada item
-                        objDetailItem.appendChild(createDetailElement(prop, val));
-                    } else {
-                        const subObjDetails = document.createElement('ul');
-                        Object.entries(val).forEach(([subProp, subVal]) => {
-                            const subObjDetailItem = document.createElement('li');
-                            subObjDetailItem.textContent = `${subProp}: ${subVal}`;
-                            subObjDetails.appendChild(subObjDetailItem);
-                        });
-                        objDetailItem.appendChild(subObjDetails);
-                    }
-                } else {
-                    objDetailItem.textContent = `${prop}: ${val}`;
-                }
-                objDetails.appendChild(objDetailItem);
-            });
-
-            listItem.appendChild(objDetails);
-            list.appendChild(listItem);
-        });
-        detailItem.textContent = `${key}:`;
-        detailItem.appendChild(list);
-    } else if (Array.isArray(value)) {
-        // Se for uma matriz, exiba seus itens em uma lista
-        const list = document.createElement('ul');
-        value.forEach(item => {
-            const listItem = document.createElement('li');
-            listItem.textContent = item;
-            list.appendChild(listItem);
-        });
-        detailItem.textContent = `${key}:`;
-        detailItem.appendChild(list);
-    } else if (typeof value === 'object') {
-        // Se for um objeto, exiba suas propriedades e valores
-        const objDetails = document.createElement('ul');
-        Object.entries(value).forEach(([prop, val]) => {
-            const objDetailItem = document.createElement('li');
-            objDetailItem.textContent = `${prop}: ${val}`;
-            objDetails.appendChild(objDetailItem);
-        });
-        detailItem.textContent = `${key}:`;
-        detailItem.appendChild(objDetails);
-    } else if (key === 'imageUrl') {
+    if (key === 'imageUrl') {
         // Se for uma URL de imagem, crie um elemento de imagem
         const img = document.createElement('img');
         img.src = value;
         img.alt = 'Pokemon Image';
-        img.classList.add('pokemon-image');
+        img.classList.add(`pokemon-image-${value}`);
+
+        img.addEventListener('click', function () {
+            img.classList.remove(`pokemon-name-${value}`);
+            img.classList.add('pokeball', 'open');
+            img.src = '../img/pokebola_aberta.png'; // Define o src da Pokébola aberta
+            img.style.border = 'none';
+            img.style.left = `${img.offsetLeft}px`;
+            img.style.top = `${img.offsetTop}px`;
+
+            setTimeout(() => {
+                img.classList.add('closed');
+                img.src = '../img/pokebola_fechada.png'; // Define o src da Pokébola fechada
+            }, 1000);
+        });
+
 
         // Adiciona um ouvinte para o evento do clique do botão direito em qualquer imagem
         img.addEventListener("contextmenu", function (event) {
@@ -88,22 +59,27 @@ function createDetailElement(key, value) {
             if (event.target.tagName.toLowerCase() === 'img') {
                 const imageURL = event.target.src; // Obtém a URL da imagem clicada
 
+                // Fecha o menu atualmente aberto, se houver
+                if (currentMenu) {
+                    currentMenu.remove();
+                }
+
                 // Cria um menu contextual
                 const menu = document.createElement("div");
                 menu.innerHTML = `
-                        <ul>
-                            <li id="feedPokemon">Alimentar Pokemon</li>
+                        <ul class="menu-items">
+                        <li id="feedPokemon"><button class="menu-btn"><i class="fa-solid fa-heart"></i>Alimentar Pokemon</button></li>
+                        </ul>
+                        <ul class="menu-items">
+                        <li id="killPokemon"><button class="menu-btn"><i class="fa-solid fa-ghost"></i></i>Matar Pokemon</button></li>
                         </ul>
                     `;
-                menu.style.position = "absolute";
+
+                menu.classList.add("menu");
                 menu.style.left = event.pageX + "px";
                 menu.style.top = event.pageY + "px";
-                menu.style.backgroundColor = "lightgray";
-                menu.style.padding = "5px";
-                menu.style.border = "1px solid gray";
-
-                // Adiciona o menu ao corpo do documento
                 document.body.appendChild(menu);
+                currentMenu = menu;
 
                 // Adiciona um ouvinte para o clique na opção "Alimentar Pokemon"
                 document.getElementById("feedPokemon").addEventListener("click", function () {
@@ -148,34 +124,81 @@ function createDetailElement(key, value) {
                         menu.remove();
                     }
                 });
+
+                // Adiciona um ouvinte para o clique na opção "Alimentar Pokemon"
+                document.getElementById("killPokemon").addEventListener("click", function () {
+                    // Simula uma chamada para um endpoint (substitua pelo seu endpoint real)
+                    fetch(`https://localhost:7081/Pokemon/KillPokemon?pokemonId=${value}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Exibe o coração após o sucesso da chamada do endpoint
+                                const heart = document.createElement("div");
+                                heart.id = "heart";
+                                heart.innerText = "💔";
+                                heart.style.position = "absolute";
+                                heart.style.left = (event.pageX + 50) + "px"; // Posiciona o coração ao lado do Pokémon
+                                heart.style.top = event.pageY + "px";
+                                document.body.appendChild(heart);
+
+                                setTimeout(() => {
+                                    // Remove o coração após 1 segundo
+                                    heart.remove();
+                                    location.reload();
+                                }, 3000);
+
+
+                            } else {
+                                console.error('Erro ao alimentar o Pokemon:', response.status);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao alimentar o Pokemon:', error);
+                        });
+
+                    // Remove o menu após selecionar a opção
+                    menu.remove();
+                });
             }
-        });
-
-        img.addEventListener('click', function () {
-            // Oculta a imagem do Pokémon
-            img.style.visibility = 'hidden';
-
-            // Exibe a Pokébola na mesma posição da imagem do Pokémon
-            const pokeball = document.createElement('img');
-            pokeball.classList.add('pokeball');
-            pokeball.style.position = 'absolute';
-            pokeball.style.left = `${img.offsetLeft}px`; // Define a posição da Pokébola com base na posição da imagem do Pokémon
-            pokeball.style.top = `${img.offsetTop}px`; // Define a posição da Pokébola com base na posição da imagem do Pokémon
-            pokemonList.appendChild(pokeball); // Adiciona a Pokébola ao mesmo contêiner que a imagem do Pokémon
-
-            // Define um tempo para a Pokébola desaparecer e revelar a imagem do Pokémon novamente
-            setTimeout(() => {
-            }, 1000);
         });
 
         detailItem.appendChild(img);
     } else {
         // Para outros tipos, exiba o valor normalmente
         detailItem.textContent = `${value}`;
-        detailItem.classList.add('pokemon-name');
+        detailItem.classList.add(`pokemon-name-${value}`);
     }
 
     return detailItem;
+}
+
+function revivePokemons() {
+    // Mostra o indicador de carregamento
+    loadingIndicator.style.display = 'block';
+    loadingIndicator.classList.add('loading');
+
+    try {
+        fetch(`https://localhost:7081/Pokemon/RevivePokemons`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+
+    } catch (error) {
+        console.error('Erro ao carregar todos os pokémons:', error);
+    } finally {
+        // Esconde o indicador de carregamento após o carregamento
+        loadingIndicator.style.display = 'none';
+    }
 }
 
 async function loadAllPokemons() {

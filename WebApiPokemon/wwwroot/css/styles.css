@@ -1,0 +1,257 @@
+/* Reset padrão */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+/* Estilos para a lista de Pokémon */
+#pokemon-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Define 3 colunas com largura mínima de 300px */
+    grid-gap: 20px;
+    /* Espaçamento entre os itens */
+    padding: 30px;
+}
+
+/* Estilos para os nomes dos Pokémon */
+.pokemon-name {
+    font-family: sans-serif;
+    /* Ou qualquer outra fonte padrão do sistema */
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Estilos para o contêiner dos Pokémon */
+#pokemon-container {
+    position: relative;
+    width: 110px;
+    /* Largura da imagem do Pokémon */
+    height: 100px;
+    /* Altura da imagem do Pokémon */
+}
+
+/* Estilos para a imagem do Pokémon */
+#pokemon-image {
+    border: none;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 200px;
+    /* Ajuste conforme necessário */
+    height: 200px;
+    /* Ajuste conforme necessário */
+    transition: transform 0.5s ease;
+    /* Transição para suavizar o movimento */
+    cursor: pointer;
+    /* Altera o cursor para indicar que a imagem é clicável */
+}
+
+.pokeball {
+    border: none; /* Remover a borda */
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    pointer-events: none;
+    transition: transform 0.5s ease;
+}
+
+.pokeball.open {
+    border: none; /* Remover a borda */
+    transform: scale(2);
+}
+
+.pokeball.closed {
+    border: none; /* Remover a borda */
+    transform: scale(1);
+}
+
+.menu {
+    position: absolute;
+    border-radius: 15px;
+    min-width: 120px;
+    background: #111317;
+    padding: 4px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .8);
+}
+
+.menu-items {
+    display: block;
+
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu-btn {
+    background-color: #000;
+    color: #e2e2e2;
+    border-radius: 4px;
+    padding: 2px;
+    font-size: 16px;
+}
+
+.menu-btn:hover {
+    background-color: #0063ff;
+    /* Cor de fundo do botão ao passar o mouse */
+}
+
+.menu-btn i {
+    margin-right: 10px;
+    /* Espaçamento entre o ícone e o texto */
+}
+
+/* Botão 'Load More' */
+.buttonMore {
+    position: fixed;
+    bottom: 20px;
+    left: calc(50vw - 320px);
+    /* Posiciona o botão 'Load More' à esquerda */
+    height: 50px;
+    width: 50px;
+    /* Agora é um círculo */
+    background-image: none;
+    border: none;
+    border-radius: 50%;
+    /* Deixa o botão totalmente redondo */
+    outline: none;
+    background-color: #f56464;
+    color: white;
+    text-align: center;
+    /* Centraliza o texto */
+    line-height: 50px;
+    /* Centraliza o texto verticalmente */
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+/* Botão 'Load All' */
+.buttonAll {
+    position: fixed;
+    bottom: 20px;
+    left: calc(50vw + 120px);
+    /* Posiciona o botão 'Load All' à direita */
+    height: 50px;
+    width: 50px;
+    /* Agora é um círculo */
+    background-image: none;
+    border: none;
+    border-radius: 50%;
+    /* Deixa o botão totalmente redondo */
+    outline: none;
+    background-color: #f56464;
+    color: white;
+    text-align: center;
+    /* Centraliza o texto */
+    line-height: 50px;
+    /* Centraliza o texto verticalmente */
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+/* Botão 'Load All' */
+.buttonRevive {
+    position: fixed;
+    bottom: 20px;
+    left: calc(42vw + 120px);
+    /* Posiciona o botão 'Load All' à direita */
+    height: 50px;
+    width: 50px;
+    /* Agora é um círculo */
+    background-image: none;
+    border: none;
+    border-radius: 50%;
+    /* Deixa o botão totalmente redondo */
+    outline: none;
+    background-color: #f56464;
+    color: white;
+    text-align: center;
+    /* Centraliza o texto */
+    line-height: 50px;
+    /* Centraliza o texto verticalmente */
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+/* Símbolos nos botões */
+.buttonMore::after {
+    content: "100";
+    /* Símbolo de seta para baixo + texto */
+}
+
+.buttonAll::after {
+    content: "All";
+    /* Texto + símbolo de seta para cima */
+}
+
+.buttonRevive::after {
+    content: "✝";
+    /* Texto + símbolo de seta para cima */
+}
+
+
+/* Indicador de carregamento */
+.loading {
+    position: fixed;
+    bottom: 20px;
+    top: calc(32vw - 200px);
+    /* Posiciona o loading no centro horizontalmente */
+    left: calc(51vw - 200px);
+    /* Posiciona o loading no centro horizontalmente */
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: white;
+    position: relative;
+    box-shadow: -20px 0 rgba(0, 0, 0, 0.1) inset;
+    animation: roll 1s ease-in-out infinite;
+    background: linear-gradient(to bottom,
+            #e83e35 0%,
+            #e83e35 50.5%,
+            #ffffff 50.51%,
+            #ffffff 100%);
+}
+
+.loading:after {
+    content: "";
+    position: absolute;
+    top: calc(100px - 3px);
+    left: 0;
+    width: 200px;
+    height: 6px;
+    background: #3f3f3f;
+}
+
+.loading:before {
+    content: "";
+    position: absolute;
+    top: 67px;
+    left: 67px;
+    width: 54px;
+    height: 54px;
+    border: solid 6px #3f3f3f;
+    border-radius: 50%;
+    background: white;
+    z-index: 1;
+    box-shadow: 0 0 15px -2px #c62828 inset;
+    animation: button 3s ease infinite;
+}
+
+/* Animações */
+@keyframes roll {
+    from {
+        transform: rotate(0);
+    }
+
+    90%,
+    to {
+        transform: rotate(720deg);
+    }
+}

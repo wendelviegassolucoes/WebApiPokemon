@@ -128,7 +128,7 @@ namespace Mongo.Repository
         }
 
         public void InsertManyArray<TItem>(
-          Expression<Func<T, object>> filterProperties,
+          Expression<Func<T, object>>? filterProperties,
           object? valueFilter,
           Expression<Func<T, IEnumerable<TItem>>>? propriedade_insercao,
           IEnumerable<TItem>? valuesInsert,

@@ -43,6 +43,8 @@ namespace WebApiPokemon.Dominio.Modelo
 
         public Feed feed { get; set; }
 
+        public bool killed {get; set;} = false;
+
         public class Feed
         {
             public int? feedLevel { get; set; }

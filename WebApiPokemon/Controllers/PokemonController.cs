@@ -60,13 +60,20 @@ public class PokemonController : ControllerBase
         }
     }
 
-    [HttpPost(Name = "InsertPokemon")]
-    public async Task<ActionResult<bool>> InsertPokemon()
+    [HttpPut(Name = "KillPokemon")]
+    public ActionResult KillPokemon(string pokemonId)
     {
         try
         {
-            PokemonAppService pokemonAppService = new();
-            return Ok(await pokemonAppService.InsertPokemonAsync());
+            bool killed = new PokemonAppService().KillPokemon(pokemonId);
+
+            if (killed)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+
         }
         catch (Exception ex)
         {
@@ -75,13 +82,20 @@ public class PokemonController : ControllerBase
         }
     }
 
-    [HttpPost(Name = "InsertForms")]
-    public async Task<ActionResult<bool>> InsertForms()
+    [HttpPut(Name = "RevivePokemons")]
+    public ActionResult RevivePokemons()
     {
         try
         {
-            PokemonAppService pokemonAppService = new();
-            return Ok(pokemonAppService.InsertFormsAsync());
+            bool killed = new PokemonAppService().RevivePokemons();
+
+            if (killed)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+
         }
         catch (Exception ex)
         {
@@ -89,4 +103,34 @@ public class PokemonController : ControllerBase
             return StatusCode(500, $"Erro ao recuperar Pokémons: {ex.Message}");
         }
     }
+
+    //[HttpPost(Name = "InsertPokemon")]
+    //public async Task<ActionResult<bool>> InsertPokemon()
+    //{
+    //    try
+    //    {
+    //        PokemonAppService pokemonAppService = new();
+    //        return Ok(await pokemonAppService.InsertPokemonAsync());
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // Trate qualquer exceção e retorne um erro HTTP 500
+    //        return StatusCode(500, $"Erro ao recuperar Pokémons: {ex.Message}");
+    //    }
+    //}
+
+    //[HttpPost(Name = "InsertForms")]
+    //public async Task<ActionResult<bool>> InsertForms()
+    //{
+    //    try
+    //    {
+    //        PokemonAppService pokemonAppService = new();
+    //        return Ok(pokemonAppService.InsertFormsAsync());
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // Trate qualquer exceção e retorne um erro HTTP 500
+    //        return StatusCode(500, $"Erro ao recuperar Pokémons: {ex.Message}");
+    //    }
+    //}
 }
