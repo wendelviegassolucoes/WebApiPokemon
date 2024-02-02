@@ -31,12 +31,12 @@ function createDetailElement(key, value) {
         return detailItem;
     }
 
-    if (key === 'imageUrl') {
-        const img = createImageElement(value);
-        detailItem.appendChild(img);
-    } else {
+    if (key === 'name') {
         detailItem.textContent = `${value}`;
         detailItem.classList.add(`pokemon-name-${value}`);
+    } else if (key === 'imageUrl'){
+        const img = createImageElement(value);
+        detailItem.appendChild(img);
     }
 
     return detailItem;
@@ -216,6 +216,7 @@ async function loadAllPokemons() {
                 pokemonList.appendChild(pokemonDetails);
             }
         });
+        
         setTimeout(() => {}, 1000);
     } catch (error) {
         console.error('Erro ao carregar todos os pokémons:', error);
@@ -237,6 +238,7 @@ async function loadPokemons() {
                 const detailItem = createDetailElement(key, value);
                 pokemonDetails.appendChild(detailItem);
             });
+
             pokemonList.appendChild(pokemonDetails);
         });
 

@@ -35,6 +35,7 @@ body {
 
 /* Estilos para os nomes dos Pokémon (com classes dinâmicas) */
 [class^="pokemon-name-"] {
+    position: relative;
     /* Estilos para todas as classes que começam com "pokemon-name-" */
     font-family: sans-serif;
     /* Ou qualquer outra fonte padrão do sistema */
@@ -42,6 +43,7 @@ body {
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 /* Adiciona um efeito de levantamento ao passar o mouse sobre o card */
