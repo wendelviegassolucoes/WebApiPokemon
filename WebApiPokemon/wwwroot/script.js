@@ -7,7 +7,7 @@ let currentPage = 1;
 const pageSize = 100;
 let currentMenu = null;
 
-loadAllPokemons();
+loadPokemons();
 
 // Event listeners
 loadMoreButton.addEventListener('click', loadPokemons);
@@ -49,7 +49,7 @@ function createImageElement(value) {
     img.classList.add(`pokemon-image-${value}`);
 
     img.addEventListener('click', function () {
-        animatePokemon(img);
+        animatePokemon(img, value);
     });
 
     img.addEventListener("contextmenu", function (event) {
@@ -60,10 +60,15 @@ function createImageElement(value) {
     return img;
 }
 
-function animatePokemon(img) {
-    img.classList.remove('pokeball', 'open');
-    img.classList.add('pokeball', 'closed');
-    img.src = '../img/pokebola_fechada.png';
+function animatePokemon(img, value) {
+    img.classList.remove(`pokemon-name-${value}`);
+    img.classList.add('pokeball', 'open');
+    img.src = '../img/pokebola_arremsso.png';
+
+    setTimeout(() => {
+        img.classList.add('closed');
+        img.src = '../img/pokebola_fechada.png';
+    }, 2000);
 }
 
 function showContextMenu(event, imageURL) {
