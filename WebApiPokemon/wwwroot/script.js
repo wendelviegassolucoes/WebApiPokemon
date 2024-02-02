@@ -80,6 +80,77 @@ function createDetailElement(key, value) {
         img.alt = 'Pokemon Image';
         img.classList.add('pokemon-image');
 
+        // Adiciona um ouvinte para o evento do clique do botão direito em qualquer imagem
+        img.addEventListener("contextmenu", function (event) {
+            event.preventDefault(); // Impede o menu padrão de aparecer
+
+            // Verifica se o clique do botão direito foi em uma imagem
+            if (event.target.tagName.toLowerCase() === 'img') {
+                const imageURL = event.target.src; // Obtém a URL da imagem clicada
+
+                // Cria um menu contextual
+                const menu = document.createElement("div");
+                menu.innerHTML = `
+                        <ul>
+                            <li id="feedPokemon">Alimentar Pokemon</li>
+                        </ul>
+                    `;
+                menu.style.position = "absolute";
+                menu.style.left = event.pageX + "px";
+                menu.style.top = event.pageY + "px";
+                menu.style.backgroundColor = "lightgray";
+                menu.style.padding = "5px";
+                menu.style.border = "1px solid gray";
+
+                // Adiciona o menu ao corpo do documento
+                document.body.appendChild(menu);
+
+                // Adiciona um ouvinte para o clique na opção "Alimentar Pokemon"
+                document.getElementById("feedPokemon").addEventListener("click", function () {
+                    // Simula uma chamada para um endpoint (substitua pelo seu endpoint real)
+                    fetch(`https://localhost:7081/Pokemon/FeedPokemon?pokemonId=${img.src}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Exibe o coração após o sucesso da chamada do endpoint
+                                const heart = document.createElement("div");
+                                heart.id = "heart";
+                                heart.innerText = "❤️";
+                                heart.style.position = "absolute";
+                                heart.style.left = (event.pageX + 50) + "px"; // Posiciona o coração ao lado do Pokémon
+                                heart.style.top = event.pageY + "px";
+                                document.body.appendChild(heart);
+
+                                setTimeout(() => {
+                                    // Remove o coração após 1 segundo
+                                    heart.remove();
+                                }, 3000);
+
+                            } else {
+                                console.error('Erro ao alimentar o Pokemon:', response.status);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao alimentar o Pokemon:', error);
+                        });
+
+                    // Remove o menu após selecionar a opção
+                    menu.remove();
+                });
+
+                // Adiciona um ouvinte para clicar fora do menu para removê-lo
+                document.addEventListener("click", function (e) {
+                    if (!menu.contains(e.target)) {
+                        menu.remove();
+                    }
+                });
+            }
+        });
+
         img.addEventListener('click', function () {
             // Oculta a imagem do Pokémon
             img.style.visibility = 'hidden';
@@ -101,6 +172,7 @@ function createDetailElement(key, value) {
     } else {
         // Para outros tipos, exiba o valor normalmente
         detailItem.textContent = `${value}`;
+        detailItem.classList.add('pokemon-name');
     }
 
     return detailItem;

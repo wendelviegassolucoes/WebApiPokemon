@@ -28,6 +28,23 @@ namespace WebApiPokemon.Services
             mappingDtoForm = new();
         }
 
+        public bool FeedPokemon(string pokemonId)
+        {
+            string pokemonIdSatinizado = Path.GetFileName(pokemonId);
+            pokemonIdSatinizado = Path.GetFileNameWithoutExtension(pokemonIdSatinizado); // Obtém o nome do arquivo sem a extensão
+            Pokemon? pokemon = Repository.TakeList(x => x.idPokemon.ToString() == pokemonIdSatinizado).FirstOrDefault();
+
+            if (pokemon != null)
+            {
+                pokemon.feed ??= new Pokemon.Feed();
+                pokemon.feed.feedLevel = 100;
+                Repository.Update(pokemon);
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task InsertFormsAsync()
         {
 

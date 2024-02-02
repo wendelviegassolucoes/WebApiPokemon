@@ -38,6 +38,28 @@ public class PokemonController : ControllerBase
         }
     }
 
+    [HttpPut(Name = "FeedPokemon")]
+    public ActionResult FeedPokemon(string pokemonId)
+    {
+        try
+        {
+            bool feeded = new PokemonAppService().FeedPokemon(pokemonId);
+
+            if (feeded)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+
+        }
+        catch (Exception ex)
+        {
+            // Trate qualquer exceção e retorne um erro HTTP 500
+            return StatusCode(500, $"Erro ao recuperar Pokémons: {ex.Message}");
+        }
+    }
+
     [HttpPost(Name = "InsertPokemon")]
     public async Task<ActionResult<bool>> InsertPokemon()
     {
