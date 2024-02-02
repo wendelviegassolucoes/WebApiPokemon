@@ -146,7 +146,7 @@ namespace WebApiPokemon.Services
             }
         }
 
-        public async Task<List<PokemonDto>> GetPokemonsDtoPaginationAsync(int pageNumber = 1, int pageSize = 20)
+        public List<PokemonDto> GetPokemonsDtoPagination(int pageNumber = 1, int pageSize = 20)
         {
             try
             {
@@ -157,12 +157,16 @@ namespace WebApiPokemon.Services
 
                 if (pokemons != null)
                 {
-                    foreach (Pokemon pokemon in pokemons)
+                    foreach (Pokemon pokemon in pokemons.OrderBy(x => x.idPokemon).ToList())
                     {
-                        string pokemonFormEndpoint = pokemon.forms.FirstOrDefault().url;
-                        conexao.request = new RestRequest(pokemonFormEndpoint);
-                        RestResponse response = await conexao.client.ExecuteAsync(conexao.request);
-                        Dominio.Modelo.Form? form = forms.FirstOrDefault(x => x.idPokemon == pokemon.idPokemon);
+                        Dominio.Modelo.Form? form = forms.FirstOrDefault(x => x.idPokemon == pokemon.idPokemon || x.name == pokemon.name);
+
+                        if (form == null ||
+                            form.sprites == null ||
+                            string.IsNullOrWhiteSpace(form.sprites.front_default))
+                        {
+                            continue;
+                        }
 
                         pokemons_dto.Add(new PokemonDto()
                         {

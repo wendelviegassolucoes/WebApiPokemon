@@ -9,12 +9,12 @@ namespace WebApiPokemon.Controllers;
 public class PokemonController : ControllerBase
 {
     [HttpGet(Name = "GetPokemons")]
-    public async Task<ActionResult<PokemonDto>> GetPokemons(int pageNumber = 1, int pageSize = 20)
+    public ActionResult<PokemonDto> GetPokemons(int pageNumber = 1, int pageSize = 20)
     {
         try
         {
             PokemonAppService pokemonAppService = new();
-            return Ok(await pokemonAppService.GetPokemonsDtoPaginationAsync(pageNumber, pageSize));
+            return Ok(pokemonAppService.GetPokemonsDtoPagination(pageNumber, pageSize));
         }
         catch (Exception ex)
         {

@@ -109,6 +109,9 @@ function createDetailElement(key, value) {
 async function loadAllPokemons() {
     // Mostra o indicador de carregamento
     loadingIndicator.style.display = 'block';
+    loadingIndicator.classList.add('loading');
+
+
 
     try {
         pokemonList.innerHTML = '';
@@ -119,16 +122,19 @@ async function loadAllPokemons() {
         data.forEach(pokemon => {
             if (pokemon) { // Verifica se pokemon não é null ou undefined
                 const pokemonDetails = document.createElement('div');
-        
+
                 // Iterar sobre as propriedades do objeto pokemon
                 for (const [key, value] of Object.entries(pokemon)) {
                     const detailItem = createDetailElement(key, value);
                     pokemonDetails.appendChild(detailItem);
                 }
-        
+
                 pokemonList.appendChild(pokemonDetails);
             }
         });
+
+        setTimeout(() => {
+        }, 1000);
 
     } catch (error) {
         console.error('Erro ao carregar todos os pokémons:', error);
@@ -141,6 +147,7 @@ async function loadAllPokemons() {
 async function loadPokemons() {
     // Mostra o indicador de carregamento
     loadingIndicator.style.display = 'block';
+    loadingIndicator.classList.add('loading');
 
     try {
         const response = await fetch(`https://localhost:7081/Pokemon/GetPokemons?pageNumber=${currentPage}&pageSize=${pageSize}`);
@@ -157,6 +164,9 @@ async function loadPokemons() {
 
             pokemonList.appendChild(pokemonDetails);
         });
+
+        setTimeout(() => {
+        }, 1000);
 
         currentPage++;
     } catch (error) {
