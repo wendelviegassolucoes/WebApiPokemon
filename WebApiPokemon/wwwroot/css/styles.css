@@ -16,40 +16,45 @@ body {
     padding: 30px;
 }
 
-/* Estilos para os nomes dos Pokémon */
-.pokemon-name {
+/* Estilos para a imagem do Pokémon dentro do card */
+.pokemon-image {
+    position: relative;
+    width: 200px; /* Ajuste conforme necessário */
+    height: 300px; /* Ajuste conforme necessário */
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    width: 100%; /* Ajuste para preencher o contêiner */
+    height: 60%; /* Ajuste conforme necessário */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    object-fit: cover; /* Mantém a proporção da imagem */
+}
+
+/* Estilos para os nomes dos Pokémon (com classes dinâmicas) */
+[class^="pokemon-name-"] {
+    /* Estilos para todas as classes que começam com "pokemon-name-" */
     font-family: sans-serif;
     /* Ou qualquer outra fonte padrão do sistema */
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
 }
 
-/* Estilos para o contêiner dos Pokémon */
-#pokemon-container {
-    position: relative;
-    width: 110px;
-    /* Largura da imagem do Pokémon */
-    height: 100px;
-    /* Altura da imagem do Pokémon */
+/* Adiciona um efeito de levantamento ao passar o mouse sobre o card */
+.pokemon-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilos para a imagem do Pokémon */
-#pokemon-image {
-    border: none;
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 200px;
-    /* Ajuste conforme necessário */
-    height: 200px;
-    /* Ajuste conforme necessário */
-    transition: transform 0.5s ease;
-    /* Transição para suavizar o movimento */
-    cursor: pointer;
-    /* Altera o cursor para indicar que a imagem é clicável */
+/* Estilo para quando a imagem do Pokémon estiver sendo clicada */
+.pokemon-image:active {
+    transform: translateY(2px);
 }
+
 
 .pokeball {
     border: none; /* Remover a borda */

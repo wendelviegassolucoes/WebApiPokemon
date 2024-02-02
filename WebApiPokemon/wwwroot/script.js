@@ -36,7 +36,7 @@ function createDetailElement(key, value) {
         detailItem.appendChild(img);
     } else {
         detailItem.textContent = `${value}`;
-        detailItem.classList.add(`pokemon-name`);
+        detailItem.classList.add(`pokemon-name-${value}`);
     }
 
     return detailItem;
@@ -137,7 +137,7 @@ async function killPokemon(value, event) {
 function showHeart(event) {
     const heart = createHeartElement();
     heart.style.position = "absolute";
-    heart.style.left = (event.pageX - 70) + "px";
+    heart.style.left = (event.pageX  -70) + "px";
     heart.style.top = event.pageY + "px";
     document.body.appendChild(heart);
     setTimeout(() => {
@@ -151,9 +151,9 @@ function showBrokenHeart(value, event) {
     heart.style.left = (event.pageX - 70) + "px";
     heart.style.top = event.pageY + "px";
     document.body.appendChild(heart);
-    closeMenu(event);
     
     setTimeout(() => {
+        closeMenu(event);
         const pokemonContainerDiv = document.querySelector(`.pokemon-image[src="${value}"]`).parentNode.parentNode;
         pokemonContainerDiv.remove();
         heart.remove();
@@ -216,7 +216,7 @@ async function loadAllPokemons() {
                 pokemonList.appendChild(pokemonDetails);
             }
         });
-        setTimeout(() => { }, 1000);
+        setTimeout(() => {}, 1000);
     } catch (error) {
         console.error('Erro ao carregar todos os pokémons:', error);
     } finally {
@@ -240,7 +240,7 @@ async function loadPokemons() {
             pokemonList.appendChild(pokemonDetails);
         });
 
-        setTimeout(() => { }, 1000);
+        setTimeout(() => {}, 1000);
         currentPage++;
     } catch (error) {
         console.error('Erro ao carregar pokémons:', error);
